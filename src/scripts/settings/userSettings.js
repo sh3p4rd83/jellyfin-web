@@ -299,6 +299,14 @@ export class UserSettings {
         return toBoolean(this.get('detailsBanner', false), true);
     }
 
+    secureCode(val) {
+        if (val !== undefined) {
+            return this.set('secureCode', val.toString(), false);
+        }
+
+        return toBoolean(this.get('secureCode', false), false);
+    }
+
     /**
      * Get or set 'Use Episode Images in Next Up and Continue Watching' state.
      * @param {string|boolean|undefined} [val] - Flag to enable 'Use Episode Images in Next Up and Continue Watching' or undefined.
@@ -647,6 +655,7 @@ export const enableFastFadein = currentSettings.enableFastFadein.bind(currentSet
 export const enableBlurhash = currentSettings.enableBlurhash.bind(currentSettings);
 export const enableBackdrops = currentSettings.enableBackdrops.bind(currentSettings);
 export const detailsBanner = currentSettings.detailsBanner.bind(currentSettings);
+export const secureCode = currentSettings.secureCode.bind(currentSettings);
 export const useEpisodeImagesInNextUpAndResume = currentSettings.useEpisodeImagesInNextUpAndResume.bind(currentSettings);
 export const language = currentSettings.language.bind(currentSettings);
 export const dateTimeLocale = currentSettings.dateTimeLocale.bind(currentSettings);

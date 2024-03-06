@@ -4,13 +4,33 @@ import ServerConnections from '../ServerConnections';
 import skinManager from '../../scripts/themeManager';
 import { appHost } from '../apphost';
 import layoutManager from '../layoutManager';
+import focusManager from '../focusManager';
 import loading from '../loading/loading';
 import toast from '../toast/toast';
+import dom from '../../scripts/dom';
 
 function loadForm(context, user, userSettings) {
     context.querySelector('#chkEnableSecureCode').checked = userSettings.secureCode();
 
+    if (!context.querySelector('#chkEnableSecureCode').checked) {
+        context.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
+    }
+
+    onCheckboxChange({
+        target: context.querySelector('#txtSecureCode')
+    });
+
     loading.hide();
+}
+
+function onCheckboxChange(e) {
+    const view = dom.parentWithClass(e.target, 'secureCodeSettings');
+
+    if (view.querySelector('#chkEnableSecureCode').checked) {
+        view.querySelector('#txtSecureCode').removeAttribute('disabled');
+    } else {
+        view.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
+    }
 }
 
 function saveUser(context, user, userSettingsInstance, apiClient) {
@@ -63,7 +83,9 @@ function onSubmit(e) {
 }
 
 function embed(options, self) {
+    options.element.classList.add('secureCodeSettings');
     options.element.innerHTML = globalize.translateHtml(template, 'core');
+    options.element.querySelector('#chkEnableSecureCode').addEventListener('change', onCheckboxChange);
     options.element.querySelector('form').addEventListener('submit', onSubmit.bind(self));
     if (options.enableSaveButton) {
         options.element.querySelector('.btnSave').classList.remove('hide');
@@ -82,12 +104,18 @@ class CodeSettings {
         const apiClient = ServerConnections.getApiClient(self.options.serverId);
         const userId = self.options.userId;
         const userSettings = self.options.userSettings;
+        const context = self.options.element;
 
-        userSettings.setUserInfo(userId, apiClient).then(() => {
-            loadForm(self.options.element, userSettings.getUser(), userSettings);
-            if (autoFocus) {
-                self.autoFocus();
-            }
+        console.log('usersettings', userSettings);
+
+        return apiClient.getUser(userId).then(user => {
+            return userSettings.setUserInfo(userId, apiClient).then(() => {
+                self.dataLoaded = true;
+                loadForm(context, user, userSettings);
+                if (autoFocus) {
+                    focusManager.autoFocus(context);
+                }
+            });
         });
     }
 }
