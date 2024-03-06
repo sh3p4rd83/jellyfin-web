@@ -243,6 +243,10 @@ div[data-role=controlgroup] a.ui-btn-active {
     resize: none;
 }
 
+.secureCodeContainer textarea {
+    resize: none;
+}
+
 @media all and (min-width: 70em) {
     .dashboardSections {
         flex-wrap: wrap;

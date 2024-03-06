@@ -1,4 +1,4 @@
-<form>
+<form style="margin: 0 auto;">
     <h2 class="sectionTitle">
         ${HeaderCode}
     </h2>
@@ -7,11 +7,11 @@
             <input type="checkbox" is="emby-checkbox" id="chkEnableSecureCode" />
             <span>${EnableSecureCode}</span>
         </label>
-        <div class="fieldDescription checkboxFieldDescription">${EnableSecureCode}</div>
+        <div class="fieldDescription checkboxFieldDescription">${EnableSecureCodeDescription}</div>
     </div>
 
     <div class="inputContainer secureCodeContainer">
-        <textarea is="emby-textarea" id="txtSecureCode" label="${LabelSecureCode}" class="textarea-mono"></textarea>
+        <input is="emby-textarea" id="txtSecureCode" label="${LabelSecureCode}" type="password" class="textarea-mono"></input>
         <div class="fieldDescription">${LabelSecureCode}</div>
     </div>
 

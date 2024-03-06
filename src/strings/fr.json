@@ -1788,5 +1788,9 @@
     "LabelWebVersion": "Version web",
     "ButtonEditUser": "Modifier l'utilisateur",
     "DlnaMovedMessage": "La fonctionnalité DLNA a été déplacée vers un plugin.",
-    "ProtectCode": "Code de protection"
+    "ProtectCode": "Code de protection",
+    "HeaderCode": "Code de protection",
+    "EnableSecureCode" : "Activer le code de sécurité",
+    "EnableSecureCodeDescription" : "Le code sera demandé lors de la connexion au serveur.",
+    "LabelSecureCode" : "Code de sécurité"
 }
