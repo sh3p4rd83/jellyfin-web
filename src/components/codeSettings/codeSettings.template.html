@@ -1,4 +1,19 @@
-<form style="margin: 0 auto;">
+<div class="deactivateSecureCode">
+    <h2 class="sectionTitle">
+        ${HeaderDeactivateSecureCode}
+    </h2>
+    <div>
+        <div class="inputContainer secureCodeContainer">
+            <textarea is="emby-textarea" id="txtDeactivateSecureCode" label="${LabelDeactivateSecureCode}" class="textarea-mono"></textarea>
+            <div class="fieldDescription">${LabelDeactivateSecureCode}</div>
+        </div>
+        <button is="emby-button" class="raised block" id="deactivateSecureCode">
+            <span>${DeactivateSecureCode}</span>
+        </button>
+    </div>
+</div>
+
+<form style="margin: 0 auto;" autocomplete="off">
     <h2 class="sectionTitle">
         ${HeaderCode}
     </h2>
@@ -9,13 +24,19 @@
         </label>
         <div class="fieldDescription checkboxFieldDescription">${EnableSecureCodeDescription}</div>
     </div>
-
-    <div class="inputContainer secureCodeContainer">
-        <input is="emby-textarea" id="txtSecureCode" label="${LabelSecureCode}" type="password" class="textarea-mono"></input>
-        <div class="fieldDescription">${LabelSecureCode}</div>
+    <div class="SetSecureCode">
+        <div class="inputContainer secureCodeContainer">
+            <input is="emby-textarea" id="txtSecureCode" label="${LabelSecureCode}" type="password" class="textarea-mono"></input>
+            <div class="fieldDescription">${LabelSecureCode}</div>
+        </div>
+        <button is="emby-button" type="button" class="raised block">
+            <span>${Show}</span>
+        </button>
     </div>
-
     <button is="emby-button" type="submit" class="raised button-submit block btnSave hide">
         <span>${Save}</span>
     </button>
 </form>
+
+
+

@@ -247,6 +247,24 @@ div[data-role=controlgroup] a.ui-btn-active {
     resize: none;
 }
 
+.deactivateSecureCode {
+    margin: 0 auto;
+    @media all and (min-width: 50em) {
+        max-width: 54em;
+    }
+}
+
+.deactivateSecureCode > div {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+}
+.deactivateSecureCode button {
+    margin-left: 1em;
+    max-width: 20em;
+}
+
 @media all and (min-width: 70em) {
     .dashboardSections {
         flex-wrap: wrap;

@@ -299,12 +299,25 @@ export class UserSettings {
         return toBoolean(this.get('detailsBanner', false), true);
     }
 
-    secureCode(val) {
+    /**
+     * Get or set 'Have Secure Code' state.
+     * @param {boolean} val - Flag to enable 'Secure Code' or undefined.
+     * @returns {boolean} 'Secure Code' state.
+     */
+    haveSecureCode(val) {
         if (val !== undefined) {
-            return this.set('secureCode', val.toString(), false);
+            return this.set('HaveSecureCode', val.toString(), false);
         }
 
-        return toBoolean(this.get('secureCode', false), false);
+        return toBoolean(this.get('HaveSecureCode', false), false);
+    }
+
+    secureCode(val) {
+        if (val !== undefined) {
+            return this.set('SecureCode', val.toString(), false);
+        }
+
+        return this.get('SecureCode', false);
     }
 
     /**
@@ -655,6 +668,7 @@ export const enableFastFadein = currentSettings.enableFastFadein.bind(currentSet
 export const enableBlurhash = currentSettings.enableBlurhash.bind(currentSettings);
 export const enableBackdrops = currentSettings.enableBackdrops.bind(currentSettings);
 export const detailsBanner = currentSettings.detailsBanner.bind(currentSettings);
+export const haveSecureCode = currentSettings.haveSecureCode.bind(currentSettings);
 export const secureCode = currentSettings.secureCode.bind(currentSettings);
 export const useEpisodeImagesInNextUpAndResume = currentSettings.useEpisodeImagesInNextUpAndResume.bind(currentSettings);
 export const language = currentSettings.language.bind(currentSettings);

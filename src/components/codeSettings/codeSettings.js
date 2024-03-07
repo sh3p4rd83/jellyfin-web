@@ -1,18 +1,24 @@
 import template from './codeSettings.template.html';
 import globalize from '../../scripts/globalize';
 import ServerConnections from '../ServerConnections';
-import skinManager from '../../scripts/themeManager';
-import { appHost } from '../apphost';
-import layoutManager from '../layoutManager';
 import focusManager from '../focusManager';
 import loading from '../loading/loading';
 import toast from '../toast/toast';
 import dom from '../../scripts/dom';
 
+let isSaved = false;
+
 function loadForm(context, user, userSettings) {
-    context.querySelector('#chkEnableSecureCode').checked = userSettings.secureCode();
+    context.querySelector('#chkEnableSecureCode').checked = userSettings.haveSecureCode();
+    context.querySelector('#txtSecureCode').value = userSettings.haveSecureCode() ? userSettings.secureCode() : '';
+
+    isSaved = userSettings.haveSecureCode();
 
     if (!context.querySelector('#chkEnableSecureCode').checked) {
+        context.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
+    }
+
+    if (userSettings.secureCode() !== '') {
         context.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
     }
 
@@ -26,42 +32,70 @@ function loadForm(context, user, userSettings) {
 function onCheckboxChange(e) {
     const view = dom.parentWithClass(e.target, 'secureCodeSettings');
 
-    if (view.querySelector('#chkEnableSecureCode').checked) {
-        view.querySelector('#txtSecureCode').removeAttribute('disabled');
+    if (view.querySelector('#chkEnableSecureCode').checked ) {
+        if (view.querySelector('#txtSecureCode').value === '') {
+            view.querySelector('#txtSecureCode').removeAttribute('disabled');
+        }
+        if (isSaved) {
+            view.querySelector('#chkEnableSecureCode').setAttribute('disabled', 'disabled');
+        }
     } else {
         view.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
+        view.querySelector('#chkEnableSecureCode').removeAttribute('disabled');
+    }
+}
+
+function onCheckDeactivation() {
+    const view = dom.parentWithClass(this, 'secureCodeSettings');
+    const userSettings = this.userSettings;
+
+    if (view.querySelector('#txtDeactivateSecureCode').value !== userSettings.secureCode()) {
+        toast(globalize.translate('incorrectPassword'));
+    } else {
+        view.querySelector('#chkEnableSecureCode').removeAttribute('disabled');
+        view.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
+        view.querySelector('#txtSecureCode').value = '';
+        view.querySelector('#chkEnableSecureCode').checked = false;
+        view.querySelector('#txtDeactivateSecureCode').value = '';
     }
 }
 
 function saveUser(context, user, userSettingsInstance, apiClient) {
-    user.Configuration.DisplayMissingEpisodes = context.querySelector('.chkDisplayMissingEpisodes').checked;
+    const isSecureCodeEnabled = context.querySelector('#chkEnableSecureCode').checked;
+    userSettingsInstance.haveSecureCode(isSecureCodeEnabled);
 
-    if (appHost.supports('displaylanguage')) {
-        userSettingsInstance.language(context.querySelector('#selectLanguage').value);
+    if (isSecureCodeEnabled) {
+        userSettingsInstance.secureCode((context.querySelector('#txtSecureCode').value).replace(/\W+/g, ''));
     }
 
-    if (user.Id === apiClient.getCurrentUserId()) {
-        skinManager.setTheme(userSettingsInstance.theme());
-    }
+    isSaved = isSecureCodeEnabled;
 
-    layoutManager.setLayout(context.querySelector('.selectLayout').value);
     return apiClient.updateUserConfiguration(user.Id, user.Configuration);
+}
+
+function correctPassword(context) {
+    const secureCode = context.querySelector('#txtSecureCode').value;
+    return secureCode.length >= 4 && secureCode.search(/\W+/g) === -1;
 }
 
 function save(instance, context, userId, userSettings, apiClient, enableSaveConfirmation) {
     loading.show();
-
-    apiClient.getUser(userId).then(user => {
-        saveUser(context, user, userSettings, apiClient).then(() => {
-            loading.hide();
-            if (enableSaveConfirmation) {
-                toast(globalize.translate('SettingsSaved'));
-            }
-            Events.trigger(instance, 'saved');
-        }, () => {
-            loading.hide();
+    if (context.querySelector('#chkEnableSecureCode').checked && !correctPassword(context)) {
+        toast(globalize.translate('incorrectPassword'));
+        loading.hide();
+    } else {
+        apiClient.getUser(userId).then(user => {
+            saveUser(context, user, userSettings, apiClient).then(() => {
+                loading.hide();
+                if (enableSaveConfirmation) {
+                    toast(globalize.translate('SettingsSaved'));
+                }
+                Events.trigger(instance, 'saved');
+            }, () => {
+                loading.hide();
+            });
         });
-    });
+    }
 }
 
 function onSubmit(e) {
@@ -85,7 +119,10 @@ function onSubmit(e) {
 function embed(options, self) {
     options.element.classList.add('secureCodeSettings');
     options.element.innerHTML = globalize.translateHtml(template, 'core');
+
     options.element.querySelector('#chkEnableSecureCode').addEventListener('change', onCheckboxChange);
+    options.element.querySelector('#deactivateSecureCode').addEventListener('click', onCheckDeactivation);
+
     options.element.querySelector('form').addEventListener('submit', onSubmit.bind(self));
     if (options.enableSaveButton) {
         options.element.querySelector('.btnSave').classList.remove('hide');
