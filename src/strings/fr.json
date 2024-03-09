@@ -1797,5 +1797,7 @@
     "LabelDeactivateSecureCode": "Code de sécurité actuel",
     "DeactivateSecureCode": "Désactiver",
     "incorrectPassword": "Code de sécurité incorrect (min 4. caractère a-z, A-Z, 0-9)",
-    "secureCodeDoesNotMatch": "Le code de sécurité ne correspond pas"
+    "secureCodeDoesNotMatch": "Le code de sécurité ne correspond pas",
+    "EnterSecureCode": "Entrez le code de sécurité",
+    "IncorrectSecureCode" : "Code de sécurité incorrect"
 }

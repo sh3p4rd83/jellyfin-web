@@ -20,6 +20,8 @@ import ServerConnections from '../../../components/ServerConnections';
 import alert from '../../../components/alert';
 import { ConnectionState } from '../../../utils/jellyfin-apiclient/ConnectionState.ts';
 import { getDefaultBackgroundClass } from '../../../components/cardbuilder/cardBuilderUtils';
+import * as userSettings from '../../../scripts/settings/userSettings';
+import toast from 'components/toast/toast';
 
 const enableFocusTransform = !browser.slow && !browser.edge;
 
@@ -157,9 +159,20 @@ export default function (view, params) {
             items: menuItems,
             title: server.Name
         }).then(function (id) {
+            const currentSettings = ApiClient.getCurrentUserId() ? userSettings : new userSettings.UserSettings();
             switch (id) {
                 case 'connect':
-                    connectToServer(server);
+                    if (currentSettings?.haveSecureCode()) {
+                        const code = prompt(globalize.translate('EnterSecureCode'));
+                        if (!code || code !== currentSettings.secureCode()) {
+                            toast(globalize.translate('IncorrectSecureCode'));
+                            break;
+                        } else {
+                            connectToServer(server);
+                        }
+                    } else {
+                        connectToServer(server);
+                    }
                     break;
 
                 case 'delete':
