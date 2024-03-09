@@ -4,8 +4,7 @@
     </h2>
     <div>
         <div class="inputContainer secureCodeContainer">
-            <textarea is="emby-textarea" id="txtDeactivateSecureCode" label="${LabelDeactivateSecureCode}" class="textarea-mono"></textarea>
-            <div class="fieldDescription">${LabelDeactivateSecureCode}</div>
+            <input is="emby-input" type="password" id="txtDeactivateSecureCode" label="${LabelDeactivateSecureCode}" class="textarea-mono"></input>
         </div>
         <button is="emby-button" class="raised block" id="deactivateSecureCode">
             <span>${DeactivateSecureCode}</span>
@@ -26,7 +25,7 @@
     </div>
     <div class="SetSecureCode">
         <div class="inputContainer secureCodeContainer">
-            <input is="emby-textarea" id="txtSecureCode" label="${LabelSecureCode}" type="password" class="textarea-mono"></input>
+            <input is="emby-input" id="txtSecureCode" label="${LabelSecureCode}" type="password" class="textarea-mono"></input>
             <div class="fieldDescription">${LabelSecureCode}</div>
         </div>
         <button is="emby-button" type="button" class="raised block">

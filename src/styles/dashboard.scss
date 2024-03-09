@@ -257,11 +257,10 @@ div[data-role=controlgroup] a.ui-btn-active {
 .deactivateSecureCode > div {
     display: flex;
     flex-direction: row;
-    align-items: baseline;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-around;
 }
 .deactivateSecureCode button {
-    margin-left: 1em;
     max-width: 20em;
 }
 
