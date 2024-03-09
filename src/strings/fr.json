@@ -1792,5 +1792,10 @@
     "HeaderCode": "Code de protection",
     "EnableSecureCode" : "Activer le code de sécurité",
     "EnableSecureCodeDescription" : "Le code sera demandé lors de la connexion au serveur.",
-    "LabelSecureCode" : "Code de sécurité"
+    "LabelSecureCode" : "Code de sécurité",
+    "HeaderDeactivateSecureCode": "Désactiver le code de sécurité",
+    "LabelDeactivateSecureCode": "Code de sécurité actuel",
+    "DeactivateSecureCode": "Désactiver",
+    "incorrectPassword": "Code de sécurité incorrect (min 4. caractère a-z, A-Z, 0-9)",
+    "secureCodeDoesNotMatch": "Le code de sécurité ne correspond pas"
 }

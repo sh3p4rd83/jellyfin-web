@@ -22,6 +22,11 @@ function loadForm(context, user, userSettings) {
         context.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
     }
 
+    if (!isSaved) {
+        context.querySelector('#txtDeactivateSecureCode').setAttribute('disabled', 'disabled');
+        context.querySelector('#deactivateSecureCode').setAttribute('disabled', 'disabled');
+    }
+
     onCheckboxChange({
         target: context.querySelector('#txtSecureCode')
     });
@@ -47,11 +52,13 @@ function onCheckboxChange(e) {
 
 function onCheckDeactivation() {
     const view = dom.parentWithClass(this, 'secureCodeSettings');
-    const userSettings = this.userSettings;
+    const self = this;
+    const userSettingsInstance = self.userSettings;
 
-    if (view.querySelector('#txtDeactivateSecureCode').value !== userSettings.secureCode()) {
-        toast(globalize.translate('incorrectPassword'));
+    if (view.querySelector('#txtDeactivateSecureCode').value !== userSettingsInstance.secureCode()) {
+        toast(globalize.translate('secureCodeDoesNotMatch'));
     } else {
+        isSaved = false;
         view.querySelector('#chkEnableSecureCode').removeAttribute('disabled');
         view.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
         view.querySelector('#txtSecureCode').value = '';
@@ -90,6 +97,15 @@ function save(instance, context, userId, userSettings, apiClient, enableSaveConf
                 if (enableSaveConfirmation) {
                     toast(globalize.translate('SettingsSaved'));
                 }
+                if (context.querySelector('#chkEnableSecureCode').checked) {
+                    context.querySelector('#chkEnableSecureCode').setAttribute('disabled', 'disabled');
+                    context.querySelector('#txtSecureCode').setAttribute('disabled', 'disabled');
+                    context.querySelector('#txtDeactivateSecureCode').removeAttribute('disabled');
+                    context.querySelector('#deactivateSecureCode').removeAttribute('disabled');
+                } else {
+                    context.querySelector('#txtDeactivateSecureCode').setAttribute('disabled', 'disabled');
+                    context.querySelector('#deactivateSecureCode').setAttribute('disabled', 'disabled');
+                }
                 Events.trigger(instance, 'saved');
             }, () => {
                 loading.hide();
@@ -119,6 +135,7 @@ function onSubmit(e) {
 function embed(options, self) {
     options.element.classList.add('secureCodeSettings');
     options.element.innerHTML = globalize.translateHtml(template, 'core');
+    options.element.querySelector('#deactivateSecureCode').userSettings = options.userSettings;
 
     options.element.querySelector('#chkEnableSecureCode').addEventListener('change', onCheckboxChange);
     options.element.querySelector('#deactivateSecureCode').addEventListener('click', onCheckDeactivation);
@@ -142,8 +159,6 @@ class CodeSettings {
         const userId = self.options.userId;
         const userSettings = self.options.userSettings;
         const context = self.options.element;
-
-        console.log('usersettings', userSettings);
 
         return apiClient.getUser(userId).then(user => {
             return userSettings.setUserInfo(userId, apiClient).then(() => {
